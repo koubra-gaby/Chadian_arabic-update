@@ -1,12 +1,22 @@
 # Les importations
-from transformers import get_linear_schedule_with_warmup, AutoTokenizer,TrainerCallback,AutoModelForCausalLM, DataCollatorForSeq2Seq,AutoModelForSeq2SeqLM, Seq2SeqTrainingArguments, Seq2SeqTrainer,EarlyStoppingCallback
-from datasets import load_dataset,Dataset, DatasetDict
 import evaluate
-import numpy as np
-from torch.cuda.amp import autocast, GradScaler
-import torch
-import tensorflow as tf
 import matplotlib.pyplot as plt
+import numpy as np
+import tensorflow as tf
+import torch
+from datasets import Dataset, DatasetDict, load_dataset
+from torch.cuda.amp import GradScaler, autocast
+from transformers import (
+    AutoModelForCausalLM,
+    AutoModelForSeq2SeqLM,
+    AutoTokenizer,
+    DataCollatorForSeq2Seq,
+    EarlyStoppingCallback,
+    Seq2SeqTrainer,
+    Seq2SeqTrainingArguments,
+    TrainerCallback,
+    get_linear_schedule_with_warmup,
+)
 
 SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
 TARGET_LANG_CODE_NLLB =  "arb_Latn" 
@@ -158,7 +168,7 @@ def training (model, tokenizer, train_test_val_dataset) :
 
 
     training_args = Seq2SeqTrainingArguments(
-        output_dir="/my_train_model_facebook_nllb_200",
+        output_dir="./my_train_model_facebook_nllb_200",
         report_to="none",
         #hub_model_id= os.environ.get('HUB_ID_2'),  # ✅ Ajoute ton Repo ID
         eval_strategy="steps",
