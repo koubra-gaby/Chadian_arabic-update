@@ -5,6 +5,7 @@ import numpy as np
 import tensorflow as tf
 import torch
 from datasets import Dataset, DatasetDict, load_dataset
+from comet import download_model, load_from_checkpoint
 from torch.cuda.amp import GradScaler, autocast
 from transformers import (
     AutoModelForCausalLM,
@@ -59,39 +60,78 @@ def training (modele_name, train_test_val_dataset) :
         labels = [[label.strip()] for label in labels]  # ROUGE/METEOR attend des listes imbriquées
         return preds, labels
 
-    def compute_metrics(eval_preds):
+    def compute_metrics(eval_preds, dataset_inputs=None):
+        """
+        Calcule les métriques de traduction incluant BLEU, ROUGE, METEOR, chrF++ et COMET.
+        
+        :param eval_preds: Tuple (preds, labels) fourni par le Trainer.
+        :param dataset_inputs: (Optionnel) Liste des textes sources d'origine. 
+                            Si non fourni, COMET sera ignoré ou une simulation sera faite.
+        """
 
-        # Charger les métriques
+        comet_model_path = download_model("Unbabel/wmt22-comet-da")
+        comet_model = load_from_checkpoint(comet_model_path)
+        # Charger les métriques standards via Hugging Face evaluate
         bleu_metric = evaluate.load("sacrebleu")
         rouge_metric = evaluate.load("rouge")
         meteor_metric = evaluate.load("meteor")
+        chrf_metric = evaluate.load("chrf") # Le module 'chrf' de evaluate supporte chrF++ via ses options
+
         preds, labels = eval_preds
+
+        # Si les prédictions sont des logis/probabilités, on prend l'argmax
         if isinstance(preds, tuple):
             preds = preds[0]
+        decoded_preds = np.argmax(preds, axis=-1) if preds.ndim == 3 else preds
 
-        # Décodage des prédictions et labels
-        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
-        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+        # Remplacer les -100 (utilisés pour ignorer le calcul de la loss sur le padding) par le token de padding
+        decoded_labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
 
-        # Nettoyage du texte
-        decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
+        # Décoder les tokens en chaînes de caractères (Remplacez 'tokenizer' par le nom de votre variable de tokenizer)
+        decoded_preds = tokenizer.batch_decode(decoded_preds, skip_special_tokens=True)
+        decoded_labels = tokenizer.batch_decode(decoded_labels, skip_special_tokens=True)
 
-        # 🏆 Calcul des métriques
-        bleu_result = bleu_metric.compute(predictions=decoded_preds, references=decoded_labels)
-        rouge_result = rouge_metric.compute(predictions=decoded_preds, references=decoded_labels)
-        meteor_result = meteor_metric.compute(predictions=decoded_preds, references=decoded_labels)
+        # Nettoyage rapide (enlever les espaces superflus)
+        decoded_preds = [pred.strip() for pred in decoded_preds]
+        decoded_labels = [[label.strip()] for label in decoded_labels] # sacrebleu attend une liste de listes pour les refs
 
-        # 📊 Récupération des scores
-        result = {
-            "bleu": bleu_result["score"],
-            "rouge": rouge_result["rougeL"],  # Utilisation du score ROUGE-L
-            "meteor": meteor_result["meteor"],
+        # 1. Calcul des métriques classiques
+        bleu_results = bleu_metric.compute(predictions=decoded_preds, references=decoded_labels)
+        rouge_results = rouge_metric.compute(predictions=decoded_preds, references=decoded_labels)
+        meteor_results = meteor_metric.compute(predictions=decoded_preds, references=decoded_labels)
+
+        # 2. Calcul de chrF++ 
+        # Pour activer chrF++, on passe word_order=2 dans les options de configuration
+        chrf_results = chrf_metric.compute(
+            predictions=decoded_preds, 
+            references=decoded_labels, 
+            word_order=2
+        )
+
+        # Regrouper les résultats de base
+        results = {
+            "bleu": bleu_results["score"],
+            "rouge1": rouge_results["rouge1"],
+            "rouge2": rouge_results["rouge2"],
+            "rougeL": rouge_results["rougeL"],
+            "meteor": meteor_results["meteor"],
+            "chrf++": chrf_results["score"]
         }
 
-        # Arrondir les scores
-        result = {k: round(v, 4) for k, v in result.items()}
-        return result
+        # 3. Calcul de COMET (Nécessite la source)
+        if dataset_inputs is not None:
+            # Format attendu par COMET : [{'src': ..., 'mt': ..., 'ref': ...}, ...]
+            # Comme decoded_labels est une liste de listes (ex: [['ref1'], ['ref2']]), on prend le premier élément [0]
+            comet_data = [
+                {"src": src, "mt": mt, "ref": ref[0]}
+                for src, mt, ref in zip(dataset_inputs, decoded_preds, decoded_labels)
+            ]
+            
+            # Calcul des prédictions (gpus=0 utilise le CPU, passez à 1 ou laissez gpus=None si vous utilisez CUDA)
+            comet_output = comet_model.predict(comet_data, batch_size=16, gpus=0, progress_bar=False)
+            results["comet"] = comet_output.system_score
+
+        return results
 
 
     def extract_langage(examples) :
