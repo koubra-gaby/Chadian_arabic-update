@@ -48,9 +48,11 @@ class LossTrackerCallback(TrainerCallback):
             self.history["eval_loss"].append(logs["eval_loss"])
 
 
-def training (model, tokenizer, train_test_val_dataset) : 
+def training (modele_name, train_test_val_dataset) : 
     
     loss_tracker = LossTrackerCallback()
+    model = AutoModelForSeq2SeqLM.from_pretrained(modele_name)
+    tokenizer = AutoTokenizer.from_pretrained(modele_name)
 
     def postprocess_text(preds, labels):
         preds = [pred.strip() for pred in preds]
@@ -168,7 +170,7 @@ def training (model, tokenizer, train_test_val_dataset) :
 
 
     training_args = Seq2SeqTrainingArguments(
-        output_dir="./my_train_model_facebook_nllb_200",
+        output_dir=f"../src/{modele_name}",
         report_to="none",
         #hub_model_id= os.environ.get('HUB_ID_2'),  # ✅ Ajoute ton Repo ID
         eval_strategy="steps",
