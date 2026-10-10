@@ -4,8 +4,10 @@
       "filename": "data-00000-of-00001.arrow"
     }
   ],
-  "_fingerprint": "0ca83c8b0e2d00d2",
-  "_format_columns": null,
+  "_fingerprint": "8fac5eee1f77bd71",
+  "_format_columns": [
+    "translation"
+  ],
   "_format_kwargs": {},
   "_format_type": null,
   "_output_all_columns": false,
