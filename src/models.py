@@ -2,10 +2,10 @@
 import evaluate
 import matplotlib.pyplot as plt
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
 import torch
 from datasets import Dataset, DatasetDict, load_dataset
-from comet import download_model, load_from_checkpoint
+#from comet import download_model, load_from_checkpoint
 from torch.cuda.amp import GradScaler, autocast
 from transformers import (
     AutoModelForCausalLM,
@@ -25,6 +25,30 @@ max_input_length = 128
 max_target_length = 128
 
 
+class MemoryCleanupCallback(TrainerCallback):
+    def on_step_end(self, args, state, control, **kwargs):
+        torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
+
+
+def plot_loss_curves(trainer) : ## For plotting train and validation loss curves
+    
+    log_history = trainer.state.log_history
+
+    # Extract training / validation loss
+    train_losses = [log["loss"] for log in log_history if "loss" in log]
+    epoch_train = [log["step"] for log in log_history if "loss" in log]
+    eval_losses = [log["eval_loss"] for log in log_history if "eval_loss" in log]
+    epoch_eval = [log["step"] for log in log_history if "eval_loss" in log]
+
+    # Plot the training loss
+    plt.plot(epoch_train, train_losses, label="Training Loss")
+    plt.plot(epoch_eval, eval_losses, label="Validation Loss")
+    plt.xlabel("Step")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss per Epoch")
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 class LossTrackerCallback(TrainerCallback):
     def __init__(self):
@@ -60,78 +84,43 @@ def training (modele_name, train_test_val_dataset) :
         labels = [[label.strip()] for label in labels]  # ROUGE/METEOR attend des listes imbriquées
         return preds, labels
 
-    def compute_metrics(eval_preds, dataset_inputs=None):
-        """
-        Calcule les métriques de traduction incluant BLEU, ROUGE, METEOR, chrF++ et COMET.
-        
-        :param eval_preds: Tuple (preds, labels) fourni par le Trainer.
-        :param dataset_inputs: (Optionnel) Liste des textes sources d'origine. 
-                            Si non fourni, COMET sera ignoré ou une simulation sera faite.
-        """
+    def compute_metrics(eval_preds):
+        preds, labels = eval_preds
 
-        comet_model_path = download_model("Unbabel/wmt22-comet-da")
-        comet_model = load_from_checkpoint(comet_model_path)
-        # Charger les métriques standards via Hugging Face evaluate
+        preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
+        labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        
+        if isinstance(preds, tuple):
+            preds = preds[0]
+
+        # Décodage des prédictions et labels
+        decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
+        #labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
+        decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
+
+        # Nettoyage du texte
+        decoded_preds, decoded_labels = postprocess_text(decoded_preds, decoded_labels)
+
+        # Charger les métriques
         bleu_metric = evaluate.load("sacrebleu")
         rouge_metric = evaluate.load("rouge")
         meteor_metric = evaluate.load("meteor")
-        chrf_metric = evaluate.load("chrf") # Le module 'chrf' de evaluate supporte chrF++ via ses options
 
-        preds, labels = eval_preds
+        # 🏆 Calcul des métriques
+        bleu_result = bleu_metric.compute(predictions=decoded_preds, references=decoded_labels)
+        rouge_result = rouge_metric.compute(predictions=decoded_preds, references=decoded_labels)
+        meteor_result = meteor_metric.compute(predictions=decoded_preds, references=decoded_labels)
 
-        # Si les prédictions sont des logis/probabilités, on prend l'argmax
-        if isinstance(preds, tuple):
-            preds = preds[0]
-        decoded_preds = np.argmax(preds, axis=-1) if preds.ndim == 3 else preds
-
-        # Remplacer les -100 (utilisés pour ignorer le calcul de la loss sur le padding) par le token de padding
-        decoded_labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-
-        # Décoder les tokens en chaînes de caractères (Remplacez 'tokenizer' par le nom de votre variable de tokenizer)
-        decoded_preds = tokenizer.batch_decode(decoded_preds, skip_special_tokens=True)
-        decoded_labels = tokenizer.batch_decode(decoded_labels, skip_special_tokens=True)
-
-        # Nettoyage rapide (enlever les espaces superflus)
-        decoded_preds = [pred.strip() for pred in decoded_preds]
-        decoded_labels = [[label.strip()] for label in decoded_labels] # sacrebleu attend une liste de listes pour les refs
-
-        # 1. Calcul des métriques classiques
-        bleu_results = bleu_metric.compute(predictions=decoded_preds, references=decoded_labels)
-        rouge_results = rouge_metric.compute(predictions=decoded_preds, references=decoded_labels)
-        meteor_results = meteor_metric.compute(predictions=decoded_preds, references=decoded_labels)
-
-        # 2. Calcul de chrF++ 
-        # Pour activer chrF++, on passe word_order=2 dans les options de configuration
-        chrf_results = chrf_metric.compute(
-            predictions=decoded_preds, 
-            references=decoded_labels, 
-            word_order=2
-        )
-
-        # Regrouper les résultats de base
-        results = {
-            "bleu": bleu_results["score"],
-            "rouge1": rouge_results["rouge1"],
-            "rouge2": rouge_results["rouge2"],
-            "rougeL": rouge_results["rougeL"],
-            "meteor": meteor_results["meteor"],
-            "chrf++": chrf_results["score"]
+        # 📊 Récupération des scores
+        result = {
+            "bleu": bleu_result["score"],
+            "rouge": rouge_result["rougeL"],  # Utilisation du score ROUGE-L
+            "meteor": meteor_result["meteor"],
         }
 
-        # 3. Calcul de COMET (Nécessite la source)
-        if dataset_inputs is not None:
-            # Format attendu par COMET : [{'src': ..., 'mt': ..., 'ref': ...}, ...]
-            # Comme decoded_labels est une liste de listes (ex: [['ref1'], ['ref2']]), on prend le premier élément [0]
-            comet_data = [
-                {"src": src, "mt": mt, "ref": ref[0]}
-                for src, mt, ref in zip(dataset_inputs, decoded_preds, decoded_labels)
-            ]
-            
-            # Calcul des prédictions (gpus=0 utilise le CPU, passez à 1 ou laissez gpus=None si vous utilisez CUDA)
-            comet_output = comet_model.predict(comet_data, batch_size=16, gpus=0, progress_bar=False)
-            results["comet"] = comet_output.system_score
-
-        return results
+        # Arrondir les scores
+        result = {k: round(v, 4) for k, v in result.items()}
+        return result
 
 
     def extract_langage(examples) :
@@ -202,7 +191,7 @@ def training (modele_name, train_test_val_dataset) :
     # On va appliquer la fonction sur notre dataset
     train_dataset = train_dataset.map(preprocess_function, batched=True, remove_columns=["inputs", "target"])
     # Dataloader
-    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
+    data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, label_pad_token_id=-100)
 
 
     early =  EarlyStoppingCallback(early_stopping_patience = 5)
@@ -212,14 +201,16 @@ def training (modele_name, train_test_val_dataset) :
     training_args = Seq2SeqTrainingArguments(
         output_dir=f"../src/{modele_name}",
         report_to="none",
-        #hub_model_id= os.environ.get('HUB_ID_2'),  # ✅ Ajoute ton Repo ID
+        #hub_model_id= os.environ.get('HUB_ID_2'),  
         eval_strategy="steps",
+        eval_steps=100,              
+        logging_steps=100, 
         learning_rate=2e-5,
         #learning_rate=1e-5,
-        gradient_checkpointing=True,  # ✅ Active la réduction mémoire
+        gradient_checkpointing=True,  
         #use_cache = False,
-        per_device_train_batch_size=32,
-        per_device_eval_batch_size=32,
+        per_device_train_batch_size=8,
+        per_device_eval_batch_size=8,
         weight_decay=0.01,
         save_total_limit=3,
         num_train_epochs=50,
@@ -230,9 +221,9 @@ def training (modele_name, train_test_val_dataset) :
         remove_unused_columns=False,
         load_best_model_at_end=True,
         save_strategy="steps",
-        #save_steps = 500,
+        #save_steps = 50,
         #resume_from_checkpoint=True,
-        gradient_accumulation_steps=4,
+        gradient_accumulation_steps=2,
 
     )
 
@@ -247,9 +238,14 @@ def training (modele_name, train_test_val_dataset) :
         processing_class=tokenizer,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
-        callbacks=[early,loss_tracker ], #CheckpointCleanupCallback()
+        callbacks=[early,loss_tracker, MemoryCleanupCallback], #CheckpointCleanupCallback()
     )
     torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
 
-    return trainer
+    trainer.train()
+
+    results = trainer.evaluate(train_dataset["test"]) 
+
+    return trainer,results
+
 
