@@ -127,40 +127,44 @@ def training (modele_name, train_test_val_dataset) :
 
         return {k: round(float(v), 4) for k, v in result.items()}
 
-    def comet_value(train_test_val_dataset) : 
 
-        # 1. Charger la métrique COMET
+
+    def comet_value(train_test_val_dataset, tokenized_dataset):
+
         comet_metric = evaluate.load("comet")
 
-        # 2. Récupérer le test set
-        test_dataset = train_test_val_dataset["test"]["translation"]
+        # Dataset brut : textes originaux
+        test_raw = train_test_val_dataset["test"]["translation"]
 
-        # Adapter les noms aux colonnes de ton dataset original
-        sources = test_dataset["fr"]
-        references = test_dataset["arb"]
+        sources = test_raw["fr"]
+        references = test_raw["arb"]
 
-        # 3. Générer les traductions avec le modèle entraîné
-        pred_output = trainer.predict(test_dataset)
+        # Dataset tokenisé : entrées du modèle
+        test_tokenized = tokenized_dataset["test"]
+
+        pred_output = trainer.predict(test_tokenized)
         pred_ids = pred_output.predictions
 
-        # Certains modèles retournent un tuple
         if isinstance(pred_ids, tuple):
             pred_ids = pred_ids[0]
 
-        # Remplacer les -100 par le token PAD
+        # Décoder les prédictions
         pred_ids = np.where(
             pred_ids == -100,
             tokenizer.pad_token_id,
             pred_ids
         )
 
-        # 4. Décoder les traductions prédites
         predictions = tokenizer.batch_decode(
             pred_ids,
             skip_special_tokens=True
         )
 
-        # 5. Calculer COMET
+        # Vérifier l'alignement
+        assert len(sources) == len(predictions) == len(references), (
+            "Les sources, prédictions et références n'ont pas la même longueur."
+        )
+
         comet_result = comet_metric.compute(
             sources=sources,
             predictions=predictions,
@@ -168,7 +172,9 @@ def training (modele_name, train_test_val_dataset) :
         )
 
         print("Score COMET sur le test set :", comet_result["mean_score"])
+
         return comet_result["mean_score"]
+
 
 
 
@@ -269,7 +275,7 @@ def training (modele_name, train_test_val_dataset) :
     print(train_test_val_dataset["test"].column_names)
     trainer.evaluate(train_dataset["test"]) 
 
-    comet_result = comet_value(train_test_val_dataset)
+    comet_result = comet_value(train_test_val_dataset,train_dataset )
 
     return trainer,comet_result
 
