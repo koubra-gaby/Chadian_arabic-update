@@ -136,7 +136,7 @@ def training (modele_name, train_test_val_dataset) :
         test_dataset = train_test_val_dataset["test"]
 
         # Adapter les noms aux colonnes de ton dataset original
-        sources = test_dataset["source"]
+        sources = test_dataset["inputs"]
         references = test_dataset["target"]
 
         # 3. Générer les traductions avec le modèle entraîné
