@@ -169,8 +169,8 @@ def training (modele_name, train_test_val_dataset) :
             references=references
         )
 
-        return comet_result
-        #print("Score COMET sur le test set :", comet_result["mean_score"])
+        print("Score COMET sur le test set :", comet_result["mean_score"])
+        return comet_result["mean_score"]
 
 
 
@@ -269,9 +269,9 @@ def training (modele_name, train_test_val_dataset) :
 
     trainer.train()
 
-    results = trainer.evaluate(train_dataset["test"]) 
+    #results = trainer.evaluate(train_dataset["test"]) 
     comet_result = comet_value(train_dataset)
 
-    return trainer,results,comet_result
+    return trainer,comet_result
 
 
