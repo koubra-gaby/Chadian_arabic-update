@@ -273,10 +273,10 @@ def training (modele_name, train_test_val_dataset) :
 
     trainer.train()
     print(train_test_val_dataset["test"].column_names)
-    trainer.evaluate(train_dataset["test"]) 
+    results = trainer.evaluate(train_dataset["test"]) 
 
     comet_result = comet_value(train_test_val_dataset,train_dataset )
 
-    return trainer,comet_result
+    return trainer,results, comet_result
 
 
