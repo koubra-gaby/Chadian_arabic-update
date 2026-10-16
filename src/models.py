@@ -130,51 +130,51 @@ def training (modele_name, train_test_val_dataset) :
 
 
 
-    def comet_value(train_test_val_dataset, tokenized_dataset):
+    # def comet_value(train_test_val_dataset, tokenized_dataset):
 
-        comet_metric = evaluate.load("comet")
+    #     comet_metric = evaluate.load("comet")
 
-        # Dataset brut : textes originaux
-        test_raw = train_test_val_dataset["test"]["translation"]
+    #     # Dataset brut : textes originaux
+    #     test_raw = train_test_val_dataset["test"]["translation"]
 
-        sources = test_raw["fr"]
-        references = test_raw["arb"]
+    #     sources = test_raw["fr"]
+    #     references = test_raw["arb"]
 
-        # Dataset tokenisé : entrées du modèle
-        test_tokenized = tokenized_dataset["test"]
+    #     # Dataset tokenisé : entrées du modèle
+    #     test_tokenized = tokenized_dataset["test"]
 
-        pred_output = trainer.predict(test_tokenized)
-        pred_ids = pred_output.predictions
+    #     pred_output = trainer.predict(test_tokenized)
+    #     pred_ids = pred_output.predictions
 
-        if isinstance(pred_ids, tuple):
-            pred_ids = pred_ids[0]
+    #     if isinstance(pred_ids, tuple):
+    #         pred_ids = pred_ids[0]
 
-        # Décoder les prédictions
-        pred_ids = np.where(
-            pred_ids == -100,
-            tokenizer.pad_token_id,
-            pred_ids
-        )
+    #     # Décoder les prédictions
+    #     pred_ids = np.where(
+    #         pred_ids == -100,
+    #         tokenizer.pad_token_id,
+    #         pred_ids
+    #     )
 
-        predictions = tokenizer.batch_decode(
-            pred_ids,
-            skip_special_tokens=True
-        )
+    #     predictions = tokenizer.batch_decode(
+    #         pred_ids,
+    #         skip_special_tokens=True
+    #     )
 
-        # Vérifier l'alignement
-        assert len(sources) == len(predictions) == len(references), (
-            "Les sources, prédictions et références n'ont pas la même longueur."
-        )
+    #     # Vérifier l'alignement
+    #     assert len(sources) == len(predictions) == len(references), (
+    #         "Les sources, prédictions et références n'ont pas la même longueur."
+    #     )
 
-        comet_result = comet_metric.compute(
-            sources=sources,
-            predictions=predictions,
-            references=references
-        )
+    #     comet_result = comet_metric.compute(
+    #         sources=sources,
+    #         predictions=predictions,
+    #         references=references
+    #     )
 
-        print("Score COMET sur le test set :", comet_result["mean_score"])
+    #     print("Score COMET sur le test set :", comet_result["mean_score"])
 
-        return comet_result["mean_score"]
+    #     return comet_result["mean_score"]
 
 
 
@@ -276,8 +276,8 @@ def training (modele_name, train_test_val_dataset) :
 
     results = trainer.evaluate(train_dataset["test"]) 
 
-    comet_result = comet_value(train_test_val_dataset,train_dataset )
+    #comet_result = comet_value(train_test_val_dataset,train_dataset )
 
-    return trainer,results, comet_result
+    return trainer,results #comet_result
 
 
