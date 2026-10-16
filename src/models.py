@@ -1,6 +1,5 @@
 # Les importations
 import evaluate
-import os
 import matplotlib.pyplot as plt
 import numpy as np
 #import tensorflow as tf
@@ -9,6 +8,7 @@ from datasets import Dataset, DatasetDict, load_dataset
 #from comet import download_model, load_from_checkpoint
 from torch.cuda.amp import GradScaler, autocast
 from transformers import (
+    AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoTokenizer,
     DataCollatorForSeq2Seq,
@@ -16,6 +16,7 @@ from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
     TrainerCallback,
+    get_linear_schedule_with_warmup,
 )
 
 SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
@@ -49,7 +50,7 @@ def plot_loss_curves(trainer, model_name) :
 
 
 def training (modele_name, train_test_val_dataset) : 
-    
+
     model = AutoModelForSeq2SeqLM.from_pretrained(modele_name)
     tokenizer = AutoTokenizer.from_pretrained(modele_name)
 
@@ -129,56 +130,6 @@ def training (modele_name, train_test_val_dataset) :
         return {k: round(float(v), 4) for k, v in result.items()}
 
 
-
-    # def comet_value(train_test_val_dataset, tokenized_dataset):
-
-    #     comet_metric = evaluate.load("comet")
-
-    #     # Dataset brut : textes originaux
-    #     test_raw = train_test_val_dataset["test"]["translation"]
-
-    #     sources = test_raw["fr"]
-    #     references = test_raw["arb"]
-
-    #     # Dataset tokenisé : entrées du modèle
-    #     test_tokenized = tokenized_dataset["test"]
-
-    #     pred_output = trainer.predict(test_tokenized)
-    #     pred_ids = pred_output.predictions
-
-    #     if isinstance(pred_ids, tuple):
-    #         pred_ids = pred_ids[0]
-
-    #     # Décoder les prédictions
-    #     pred_ids = np.where(
-    #         pred_ids == -100,
-    #         tokenizer.pad_token_id,
-    #         pred_ids
-    #     )
-
-    #     predictions = tokenizer.batch_decode(
-    #         pred_ids,
-    #         skip_special_tokens=True
-    #     )
-
-    #     # Vérifier l'alignement
-    #     assert len(sources) == len(predictions) == len(references), (
-    #         "Les sources, prédictions et références n'ont pas la même longueur."
-    #     )
-
-    #     comet_result = comet_metric.compute(
-    #         sources=sources,
-    #         predictions=predictions,
-    #         references=references
-    #     )
-
-    #     print("Score COMET sur le test set :", comet_result["mean_score"])
-
-    #     return comet_result["mean_score"]
-
-
-
-
     def extract_langage(examples) :
         # On va extraire le langage arabe et le langage français
         inputs = [fr['fr'] for fr in examples["translation"]]
@@ -218,14 +169,14 @@ def training (modele_name, train_test_val_dataset) :
 
 
     # On va appliquer la fonction sur notre dataset
-    train_dataset_map = train_test_val_dataset.map(extract_langage, batched=True, remove_columns=["translation"])
+    train_dataset = train_test_val_dataset.map(extract_langage, batched=True, remove_columns=["translation"])
     # On va appliquer la fonction sur notre dataset
-    train_dataset = train_dataset_map.map(preprocess_function, batched=True, remove_columns=["inputs", "target"])
+    train_dataset = train_dataset.map(preprocess_function, batched=True, remove_columns=["inputs", "target"])
     # Dataloader
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, label_pad_token_id=-100)
 
 
-    early =  EarlyStoppingCallback(early_stopping_patience = 3)
+    early =  EarlyStoppingCallback(early_stopping_patience = 5)
 
 
     training_args = Seq2SeqTrainingArguments(
@@ -233,16 +184,16 @@ def training (modele_name, train_test_val_dataset) :
         report_to="none",
         #hub_model_id= os.environ.get('HUB_ID_2'),  
         eval_strategy="steps",
-        eval_steps=100,              
-        logging_steps=100, 
+        eval_steps=5,              
+        logging_steps=5, 
         learning_rate=2e-5,
         #learning_rate=1e-5,
         gradient_checkpointing=True,  
         #use_cache = False,
-        per_device_train_batch_size=64,
-        per_device_eval_batch_size=32,
+        per_device_train_batch_size=2,
+        per_device_eval_batch_size=1,
         weight_decay=0.01,
-        save_total_limit=5,
+        save_total_limit=3,
         num_train_epochs=50,
         metric_for_best_model="eval_loss",
         predict_with_generate=True,
@@ -253,7 +204,7 @@ def training (modele_name, train_test_val_dataset) :
         save_strategy="steps",
         #save_steps = 50,
         resume_from_checkpoint=True,
-        #gradient_accumulation_steps=4,
+        #gradient_accumulation_steps=2,
 
     )
 
@@ -276,8 +227,6 @@ def training (modele_name, train_test_val_dataset) :
 
     results = trainer.evaluate(train_dataset["test"]) 
 
-    #comet_result = comet_value(train_test_val_dataset,train_dataset )
-
-    return trainer,results #comet_result
+    return trainer,results
 
 
