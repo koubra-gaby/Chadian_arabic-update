@@ -8,7 +8,6 @@ from datasets import Dataset, DatasetDict, load_dataset
 #from comet import download_model, load_from_checkpoint
 from torch.cuda.amp import GradScaler, autocast
 from transformers import (
-    AutoModelForCausalLM,
     AutoModelForSeq2SeqLM,
     AutoTokenizer,
     DataCollatorForSeq2Seq,
@@ -16,7 +15,6 @@ from transformers import (
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
     TrainerCallback,
-    get_linear_schedule_with_warmup,
 )
 
 SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
@@ -234,8 +232,8 @@ def training (modele_name, train_test_val_dataset) :
         #learning_rate=1e-5,
         gradient_checkpointing=True,  
         #use_cache = False,
-        per_device_train_batch_size=1,
-        per_device_eval_batch_size=1,
+        per_device_train_batch_size=4,
+        per_device_eval_batch_size=4,
         weight_decay=0.01,
         save_total_limit=3,
         num_train_epochs=50,
@@ -248,7 +246,7 @@ def training (modele_name, train_test_val_dataset) :
         save_strategy="steps",
         #save_steps = 50,
         #resume_from_checkpoint=True,
-        gradient_accumulation_steps=4,
+        #gradient_accumulation_steps=4,
 
     )
 
