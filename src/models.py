@@ -232,10 +232,10 @@ def training (modele_name, train_test_val_dataset) :
         #learning_rate=1e-5,
         gradient_checkpointing=True,  
         #use_cache = False,
-        per_device_train_batch_size=16,
-        per_device_eval_batch_size=16,
+        per_device_train_batch_size=64,
+        per_device_eval_batch_size=32,
         weight_decay=0.01,
-        save_total_limit=3,
+        save_total_limit=5,
         num_train_epochs=50,
         metric_for_best_model="eval_loss",
         predict_with_generate=True,
@@ -267,7 +267,7 @@ def training (modele_name, train_test_val_dataset) :
 
     trainer.train()
     trainer.evaluate(train_dataset["test"]) 
-    
+
     comet_result = comet_value(train_dataset)
 
     return trainer,comet_result
