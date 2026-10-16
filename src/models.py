@@ -133,11 +133,11 @@ def training (modele_name, train_test_val_dataset) :
         comet_metric = evaluate.load("comet")
 
         # 2. Récupérer le test set
-        test_dataset = train_test_val_dataset["test"]
+        test_dataset = train_test_val_dataset["test"]["translation"]
 
         # Adapter les noms aux colonnes de ton dataset original
-        sources = test_dataset["inputs"]
-        references = test_dataset["target"]
+        sources = test_dataset["fr"]
+        references = test_dataset["arb"]
 
         # 3. Générer les traductions avec le modèle entraîné
         pred_output = trainer.predict(test_dataset)
