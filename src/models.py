@@ -127,7 +127,7 @@ def training (modele_name, train_test_val_dataset) :
 
         return {k: round(float(v), 4) for k, v in result.items()}
 
-    def comet_value() : 
+    def comet_value(train_test_val_dataset) : 
 
         # 1. Charger la métrique COMET
         comet_metric = evaluate.load("comet")
@@ -266,10 +266,10 @@ def training (modele_name, train_test_val_dataset) :
     torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
 
     trainer.train()
-    print(train_dataset["test"].column_names)
+    print(train_test_val_dataset["test"].column_names)
     trainer.evaluate(train_dataset["test"]) 
 
-    comet_result = comet_value()
+    comet_result = comet_value(train_test_val_dataset)
 
     return trainer,comet_result
 
