@@ -266,8 +266,8 @@ def training (modele_name, train_test_val_dataset) :
     torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
 
     trainer.train()
-
-    #results = trainer.evaluate(train_dataset["test"]) 
+    trainer.evaluate(train_dataset["test"]) 
+    
     comet_result = comet_value(train_dataset)
 
     return trainer,comet_result
