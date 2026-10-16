@@ -1,5 +1,6 @@
 # Les importations
 import evaluate
+import os
 import matplotlib.pyplot as plt
 import numpy as np
 #import tensorflow as tf
@@ -224,7 +225,7 @@ def training (modele_name, train_test_val_dataset) :
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, label_pad_token_id=-100)
 
 
-    early =  EarlyStoppingCallback(early_stopping_patience = 5)
+    early =  EarlyStoppingCallback(early_stopping_patience = 3)
 
 
     training_args = Seq2SeqTrainingArguments(
