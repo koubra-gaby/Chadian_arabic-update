@@ -127,7 +127,7 @@ def training (modele_name, train_test_val_dataset) :
 
         return {k: round(float(v), 4) for k, v in result.items()}
 
-    def comet_value(train_test_val_dataset) : 
+    def comet_value() : 
 
         # 1. Charger la métrique COMET
         comet_metric = evaluate.load("comet")
@@ -268,7 +268,7 @@ def training (modele_name, train_test_val_dataset) :
     trainer.train()
     trainer.evaluate(train_dataset["test"]) 
 
-    comet_result = comet_value(train_dataset)
+    comet_result = comet_value()
 
     return trainer,comet_result
 
