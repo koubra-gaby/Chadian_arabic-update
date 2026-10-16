@@ -218,9 +218,9 @@ def training (modele_name, train_test_val_dataset) :
 
 
     # On va appliquer la fonction sur notre dataset
-    train_dataset = train_test_val_dataset.map(extract_langage, batched=True, remove_columns=["translation"])
+    train_dataset_map = train_test_val_dataset.map(extract_langage, batched=True, remove_columns=["translation"])
     # On va appliquer la fonction sur notre dataset
-    train_dataset = train_dataset.map(preprocess_function, batched=True, remove_columns=["inputs", "target"])
+    train_dataset = train_dataset_map.map(preprocess_function, batched=True, remove_columns=["inputs", "target"])
     # Dataloader
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, label_pad_token_id=-100)
 
@@ -273,7 +273,7 @@ def training (modele_name, train_test_val_dataset) :
     torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
 
     trainer.train()
-    print(train_test_val_dataset["test"].column_names)
+
     results = trainer.evaluate(train_dataset["test"]) 
 
     comet_result = comet_value(train_test_val_dataset,train_dataset )
