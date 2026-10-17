@@ -176,7 +176,7 @@ def training (modele_name, train_test_val_dataset) :
     data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model, label_pad_token_id=-100)
 
 
-    early =  EarlyStoppingCallback(early_stopping_patience = 5)
+    early =  EarlyStoppingCallback(early_stopping_patience = 3)
 
 
     training_args = Seq2SeqTrainingArguments(
@@ -197,7 +197,7 @@ def training (modele_name, train_test_val_dataset) :
         num_train_epochs=50,
         metric_for_best_model="eval_loss",
         predict_with_generate=True,
-        fp16=True, 
+        fp16=False, 
         #push_to_hub=True,
         remove_unused_columns=False,
         load_best_model_at_end=True,
