@@ -20,7 +20,7 @@ from transformers import (
 )
 
 SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
-TARGET_LANG_CODE_NLLB =  "arb_Latn" 
+TARGET_LANG_CODE_NLLB =  "shu_Latn" 
 max_input_length = 128
 max_target_length = 128
 
