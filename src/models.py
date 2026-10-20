@@ -20,7 +20,7 @@ from transformers import (
 )
 
 SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
-TARGET_LANG_CODE_NLLB =  "shu_Latn" 
+TARGET_LANG_CODE_NLLB =  "arb_Latn" 
 max_input_length = 128
 max_target_length = 128
 
@@ -194,7 +194,7 @@ def training (modele_name, train_test_val_dataset) :
         per_device_eval_batch_size=64,
         weight_decay=0.01,
         save_total_limit=5,
-        num_train_epochs=50,
+        num_train_epochs=100,
         metric_for_best_model="eval_loss",
         predict_with_generate=True,
         fp16=True, 
