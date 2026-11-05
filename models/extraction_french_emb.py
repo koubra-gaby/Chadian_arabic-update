@@ -45,7 +45,7 @@ def extract_nllb_word_embeddings(
     # 2. Récupérer directement la matrice des embeddings
     embedding_matrix = (
         model.get_input_embeddings()
-        .weight.detach().gpu
+        .weight.detach()
     )
 
     embedding_dim = embedding_matrix.shape[1]
