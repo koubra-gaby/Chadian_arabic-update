@@ -4,7 +4,6 @@ chadara arbre
 akil nourriture
 almi eau
 beet maison
-buuta bas-fond
 chette piment
 chaahi thé
 darraaba gombo
@@ -61,7 +60,6 @@ haami chaud
 hana de
 amal travail
 ana moi
-ille jusqu'à
 laham viande
 dihin huile
 usum nom
@@ -162,7 +160,6 @@ achiir secret
 achaayir secrets
 aachir dixième
 aachre dixième
-achiiye après-midi
 achmaan confiant
 achmaane confiante
 achmaaniin confiants
@@ -181,7 +178,6 @@ adda mordre
 adda accompagner
 adda compter
 addab élever
-addaggag s'implanter
 addal réparer
 addibiin éducation
 addiliin réparation
@@ -260,7 +256,6 @@ ajiile rapide
 ajiiliin rapides
 ajiin pâte
 ajjab étonner
-ajjammal s'embellir
 ajjan pétrir
 ajjar embaucher
 ajjaz vieillir
@@ -283,7 +278,6 @@ akkaala gourmande
 akkaaliin gourmands
 aks contraire
 aktar plus
-akuun peut-être
 aakhab punir
 akhabach gris
 khabcha grise
@@ -305,7 +299,6 @@ awaakhib consequences
 akhiide mariage
 akhiir fin
 aakhir dernier
-aakhira l'au-delà
 akhkhar tarder
 akhu frère
 akhwaan frères
@@ -337,20 +330,14 @@ aalim savant
 aalme savante
 ulama savants
 alkallam parler
-alkaatalo s'entre-tuer
 alkhaalat contester
 alla hausser
 allag suspendre
 allah dieu
 allam apprendre
 allimiin instruction
-almakkan s'installer
 alaami eaux
-alwassa' s'élargir
 al'achcha dîner
-al'ajjab s'étonner
-al'akhkhar s'attarder
-al'allam s'instruire
 al'assaf regretter
 aam nager
 aam public
@@ -362,7 +349,6 @@ aamal traiter
 amaan confiance
 aaman croire
 amar ordonner
-amar s'installer
 ambaakir demain
 ambalbaala flambant
 ambardabaay ogre
@@ -371,8 +357,6 @@ ambardab ogres
 amba'uuda moustiques
 ambeen entre
 ambeenaat entre
-ambukra après-demain
-ambuuku sourds-muets
 amchawwaafa miroir
 amchawwaafaat miroirs
 amchideegaat vipère
@@ -412,14 +396,9 @@ am'iyeedaat lot
 ana je
 aanas causer
 anbahat paniquer
-anbalas s'échapper
 anbaani chansonnier
-anbarat s'écorcher
-andafan s'enterrer
 andamma rejoindre
 andassa entrer
-anfakka s'ouvrir
-anfatah s'ouvrir
 angaali manioc
 angara nuque
 anaagir nuques
@@ -429,19 +408,11 @@ angurbo piétons
 anhafad garder
 anhazza trembler
 aniina nous
-anjabar s'obliger
-anjappa l'église
-ankarab s'attraper
 ankarra ramper
-ankatab s'écrire
-anlaga s'obtenir
-anlawa s'enrouler
 annasar gagner
-anrahak s'écraser
 ansabba couler
 anta donner
 antaha finir
-antawa s'enrouler
 antaay femelle
 anaati femelles
 anzayaat chèvres
@@ -481,8 +452,6 @@ araamil veuves
 arnab lapin
 araanib lapins
 arr lâche
-arrad s'enfuir
-arraja s'attendre
 aryaan nu
 aryaane nue
 aryaaniin nus
@@ -515,14 +484,9 @@ asiir jus
 askar militaires
 askari militaires
 asaakir militaires
-asli d'origine
-asliiye d'origine
-asliyiin d'origines
 assaar tourteau
 assas fonder
-assaa'ad s'entraider
 astahbal plaisanter
-astakhrab s'étonner
 asta'mal utiliser
 yista'mal utilisera
 asta'mar coloniser
@@ -558,7 +522,6 @@ awraatiye immigrée
 awraata immigréz
 awwaj tordre
 awwal avant
-awwalan d'abord
 awwalaani premier
 awwalaaniiye premiere
 awwalaaniyiin premiers
@@ -668,7 +631,6 @@ bannayiin constructeurs
 baara dévier
 barad grêle
 barag étinceler
-barak s'agenouiller
 baarak bénir
 baraka bénédiction
 barakaat bénédictions
@@ -961,10 +923,6 @@ churab soupes
 chuwaal sac
 chawaawiil sacs
 chu'uun affaires
-da celui-ci
-di celle-ci
-dool ceux-ci
-deel celles-ci
 dabah égorger
 dabakh tanner
 dabanga grenier
@@ -1000,9 +958,6 @@ duhuur dos
 dahar interdire
 dahiiye sacrifice
 dahaaya sacrifices
-daak celui-là
-diik celle-là
-doolaak ceux-là
 dakar mâle
 dukuur mâles
 daktoor docteur
@@ -1039,7 +994,6 @@ damaayir consciences
 damm sang
 dumuum sangs
 damma conserver
-damman jusqu'à
 dammar détruire
 dam'e larme
 dumuu' larmes
@@ -1067,11 +1021,8 @@ dawaarij cuisses
 darra verser
 darra nuire
 darra vanner
-darrab s'entraîner
 darraaja vélo
 darraajaat vélos
-darre co-épouse
-daraayir co-épouses
 darrijiin glorification
 dassa enfiler
 dastuur constitution
@@ -1205,7 +1156,6 @@ faadyiin vides
 fadiihe scandale
 fadaayeh scandales
 fadiyiin rançon
-faggar s'appauvrir
 fagga' éclore
 fagraan pauvre
 fagraane pauvre
@@ -1395,7 +1345,6 @@ ganas chasser
 ganat gémir
 ganduul épi
 ganaadiil épis
-gangas s'accroupir
 ganiis chasse
 ganiit gémissements
 gannaasi chasseur
@@ -1416,7 +1365,6 @@ guruun cornes
 garmaan nostalgique
 garmaane nostalgique
 garmaaniin nostalgiques
-garrab s'approcher
 garse pincée
 garsaat pincées
 gasab roseaux
@@ -1622,8 +1570,6 @@ halaaliif phacochères
 halu doux
 haluwe douce
 haluwiin doux
-hama beau-frère
-humyaan beaux-frères
 hama protéger
 haama protéger
 hamaad acidité
@@ -1632,8 +1578,6 @@ humlaan agneaux
 hamaam pigeons
 hamaamaay pigeon
 hamaar rougeur
-hamaat belle-soeur
-hamaataat belles-soeurs
 hambuuba ballon
 hanaabiib ballons
 hamdu louange
@@ -1722,7 +1666,6 @@ hasuudiin jaloux
 hatab bois
 hatabaay bois
 hatta secouer
-hatta jusqu'à
 hawa air
 haawag contourner
 haawal essayer
@@ -1773,7 +1716,6 @@ ahlaam rêves
 hillaal villages
 himil supporter
 himil fardeau
-hinaak là-bas
 hini ici
 hinna elles
 hinne henné
@@ -1856,7 +1798,6 @@ ikhaab punition
 ikhaabaat punitions
 ikhtaar choisir
 ikhtiyaar choix
-ila jusqu'à
 ilaahaat dieux
 ilaaj traitement
 ilaajaat traitements
@@ -1901,7 +1842,6 @@ itmanna souhaiter
 itneen deux
 itwaffa mourir
 it'assaf regretter
-iya grand-mère
 iyaal enfants
 iyeed bâtonnet
 iyeedat bâtonnets
@@ -1945,7 +1885,6 @@ jahmaane enragée
 jahmaaniin enragés
 jalad fouetter
 jalaal majesté
-jalas s'asseoir
 jallaabiiye boubou
 jalaaliib boubous
 jalla' gâter
@@ -2015,8 +1954,6 @@ jaasuusa espione
 jawaasiis espions
 jawaab lettre
 jawaabaat lettres
-jawwaaniiye sous-vêtement
-jawwaaniyaat sous-vêtements
 jaayir dictateur
 jaayre dictateuse
 jaayriin dictateurs
@@ -2037,9 +1974,6 @@ juyuuch armées
 jibna fromage
 jidaad poules
 jidaam lèpre
-jidd grand-père
-jidde grande-mère
-juduud grands-parents
 jiga vautour
 jihaad effort
 jiihe direction
@@ -2075,8 +2009,6 @@ jumma repos
 juruf berge
 kheel chevals
 juwwa dedans
-juzlaan porte-monnaie
-jazaaliin porte-monnaies
 juzu partie
 ajza parties
 juu' faim
@@ -2142,8 +2074,6 @@ kaan devenir
 kanfuut son
 kaniisa église
 kanaayis églises
-kaanuun porte-braise
-kawaaniin porte-braises
 karab tenir
 karaaha défault
 karaahiiya aversion
@@ -2308,7 +2238,6 @@ khaddaariin traîtres
 khaddas sanctifier
 khadduur perles
 khadduuraay perle
-khaadi là-bas
 khaadim serviteur
 khaadum serviteur
 khuddaam serviteurs
@@ -2432,7 +2361,6 @@ khatar voyager
 khatari dangereux
 khatariye dangereuse
 khatariyiin dangereux
-khatas s'enfoncer
 khaati fautif
 khaatiye fautive
 khaatiyiin fautifs
@@ -2477,7 +2405,6 @@ khazan emmagasiner
 khazza ficher
 khaa'ida fondation
 khawaa'id fondations
-kheeb l'avenir
 kheel chevaux
 kheema tente
 khiyam tentes
@@ -2495,7 +2422,6 @@ khilaafaat différends
 khilis finir
 khiima honneur
 khiiyam honneurs
-khimir s'évanouir
 khina richesse
 khine chanson
 akhaani chansons
@@ -2555,7 +2481,6 @@ laggat cueillir
 laggitiin cueillette
 lahab flamme
 lahiib flammes
-lahaddi jusqu'à
 lahamaay viande
 lahiib flamme
 laaji' réfugié
@@ -2596,7 +2521,6 @@ leel nuit
 layaali nuits
 leelaat nuits
 leemuun citrons
-libis s'habiller
 liga trouver
 ligdaabe hangar
 lagaadiib hangars
@@ -2615,7 +2539,6 @@ liitraat litre
 li'ib jouer
 loon couleur
 alwaan couleurs
-looz l'amande
 lubaas vêtement
 lubaasaat vêtements
 lubya haricots
@@ -2752,10 +2675,6 @@ makchuufiin inspectés
 makfuuf ourlé
 makfuufa ourlée
 makfuufiin ourlés
-makkan s'installer
-maknuus porte-malheur
-maknuusa porte-malheur
-makaaniis porte-malheurs
 makruub attrapé
 makruuba attrapée
 makruubiin attrapés
@@ -3197,8 +3116,6 @@ mukhattiyiin couverts
 mukhayyat cousu
 mukhayyata cousue
 mukhayyatiin cousus
-mukhbar brûle-parfum
-makhaabir brûle-parfums
 mukhkh cerveau
 makhakha cerveaux
 mukhlaat dispute
@@ -3233,7 +3150,6 @@ mumassiliin représentants
 mumattit allongé
 mumattite allongée
 mumattitiin allongés
-mumkin peut-être
 mumtalika possession
 mumtalikaat possessions
 muna espoir
@@ -3507,7 +3423,6 @@ nakat creuser
 naakhach palabrer
 nakhkhach griffer
 naam dormir
-namma jusqu'à
 nandaali jaloux
 nandaaliye jalouse
 nandaaliin jaloux
@@ -3515,11 +3430,7 @@ nangnang murmurer
 niiraan feux
 naar briller
 nasar gagner
-nasiib beau-père
-nusubaan beau-pères
 nasiibe malheur
-nasiibe belle-mère
-nasiibaat belle-mères
 naasir vainqueur
 nasur victoire
 nataj produire
@@ -3589,8 +3500,6 @@ nubbaal arc
 nabaabiil arcs
 nuchchaab flèche
 nachaachiib flèches
-nuggaara tam-tam
-nagaagiir tam-tams
 nugra trou
 nugaar trous
 nugta point
@@ -3611,7 +3520,6 @@ pappa sandalettes
 peel pelle
 peelaat pelles
 piyees pioche
-pièces d'identité
 ponti clou
 panaati clous
 poppi poupée
@@ -3788,8 +3696,6 @@ sabuur patient
 sabuura patiente
 sabuuriin patients
 sab'a sept
-sab'ataachar dix-sept
-sab'iin soixante-dix
 sadakha sacrifice
 sadakhaat sacrifices
 sadd barrage
@@ -3995,7 +3901,6 @@ sihir sorcellerie
 ashaar sorcelleries
 sijin prison
 sujuun prisons
-sikir s'enivrer
 silaah arme
 asliha armes
 silsila chaîne
@@ -4091,7 +3996,6 @@ tachcha griller
 tachchiin incendie
 tadriib formation
 tadriibaat formations
-taafag s'entendre
 taffaaya cendrier
 taffaayaat cendriers
 tafrikha racisme
@@ -4174,8 +4078,6 @@ tamaama complete
 tamaamiin complets
 taman prix
 tamaane huit
-tamaaniin quatre-vingts
-tamaantaachar dix-huit
 tamaasa stupidité
 tamaatim tomates
 tamaatimaay tomate
@@ -4282,8 +4184,6 @@ tiraah avortement
 tireyya pléiade
 tirke origine
 tis'a neuf
-tis'ataachar dix-neuf
-tis'iin quatre-vingt-dix
 titime histoire
 tiyeere oisillon
 tiyeeraat oisillons
@@ -4353,7 +4253,6 @@ waadihe claire
 waadihiin clairs
 wadu ablutions
 waafag acquiescer
-wagaf s'arrêter
 waga' tomber
 waga'aan chute
 waagi' tombé
@@ -4439,8 +4338,6 @@ wazin poids
 waziir ministre
 waziire ministre
 wuzara ministres
-wa'ad rendez-vous
-wu'uud rendez-vous
 waa'i éveillé
 waa'iye éveillée
 waa'iyiin éveillés
@@ -4450,7 +4347,6 @@ weenu lequel
 weeni laquelle
 weenumman lesquelles
 wiheed seul
-wihil s'embourber
 wijee'e contrariété
 wijih visage
 wujuuh visages
@@ -4471,7 +4367,6 @@ yalla allez
 yaatu qui
 yaati qui
 yaatumman lesquels
-ya'ni c'est-à-dire
 yibis sécher
 yo oui
 yoomi quotidien
@@ -4522,7 +4417,6 @@ zarrag lapider
 zarraa'i cultivateur
 zarraa'iye cultivateuse
 zarraa'iin cultivateurs
-zaat soi-même
 zawj époux
 zawja épouse
 azwaaj époux
