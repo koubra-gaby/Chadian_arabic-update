@@ -325,3 +325,76 @@ def load_vec(emb_path, nmax=50000):
     id2word = {v: k for k, v in word2id.items()}
     embeddings = np.vstack(vectors)
     return embeddings, id2word, word2id
+
+
+def filter_mutual_nn(
+    arabic_path,
+    french_path,
+    output_path,
+    K=5,
+    nmax=50000
+):
+    # Charger les embeddings
+    arabic_emb, arabic_id2word, arabic_word2id = load_vec(
+        arabic_path, nmax
+    )
+
+    french_emb, french_id2word, french_word2id = load_vec(
+        french_path, nmax
+    )
+
+    # Normaliser les embeddings pour calculer les similarités cosinus
+    arabic_norm = (
+        arabic_emb / np.linalg.norm(arabic_emb, 2, 1)[:, None]
+    )
+
+    french_norm = (
+        french_emb / np.linalg.norm(french_emb, 2, 1)[:, None]
+    )
+
+    retained_words = []
+
+    # Parcourir chaque mot arabe
+    for arabic_idx, arabic_word in arabic_id2word.items():
+
+        arabic_vector = arabic_norm[arabic_idx]
+
+        # K plus proches voisins français du mot arabe
+        scores_ar_fr = french_norm.dot(arabic_vector)
+        french_neighbors = scores_ar_fr.argsort()[-K:][::-1]
+
+        # Vérifier la réciprocité
+        for french_idx in french_neighbors:
+
+            french_word = french_id2word[french_idx]
+            french_vector = french_norm[french_idx]
+
+            # K plus proches voisins arabes du mot français
+            scores_fr_ar = arabic_norm.dot(french_vector)
+            arabic_neighbors = scores_fr_ar.argsort()[-K:][::-1]
+
+            # Le mot arabe initial est-il parmi ces voisins ?
+            if arabic_idx in arabic_neighbors:
+                retained_words.append(arabic_word)
+                break
+
+    # Écrire les mots arabes conservés avec leurs embeddings originaux
+    with io.open(output_path, 'w', encoding='utf-8', newline='\n') as f:
+
+        f.write(f"{len(retained_words)} {arabic_emb.shape[1]}\n")
+
+        for word in retained_words:
+            idx = arabic_word2id[word]
+            vector = arabic_emb[idx]
+
+            f.write(
+                word + " " +
+                " ".join(map(str, vector)) + "\n"
+            )
+
+    print("Vocabulaire arabe initial :", len(arabic_emb))
+    print("Mots arabes conservés :", len(retained_words))
+    print("Mots arabes supprimés :", len(arabic_emb) - len(retained_words))
+    print("Fichier généré :", output_path)
+
+    return retained_words
