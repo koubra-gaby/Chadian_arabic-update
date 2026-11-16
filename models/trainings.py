@@ -19,15 +19,27 @@ from transformers import (
     get_linear_schedule_with_warmup,
 )
 
-SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
-TARGET_LANG_CODE_NLLB =  "arb_Latn" 
+
+SRC_2_TGT = False  # if it False, that means we will train our model from chadian arabic to french. 
+                   # If you wanna do the inverse, change it to True
+
 max_input_length = 128
 max_target_length = 128
+
+if SRC_2_TGT :
+    SOURCE_LANG_CODE_NLLB =  "fra_Latn" 
+    TARGET_LANG_CODE_NLLB =  "arb_Latn" 
+else :
+    SOURCE_LANG_CODE_NLLB =  "arb_Latn" 
+    TARGET_LANG_CODE_NLLB =  "fra_Latn" 
+
 
 
 class MemoryCleanupCallback(TrainerCallback):
     def on_step_end(self, args, state, control, **kwargs):
         torch.cuda.empty_cache()  # Libérer la mémoire GPU inutilisée
+
+
 
 def plot_loss_curves(trainer, model_name) :
     log_history = trainer.state.log_history
@@ -131,9 +143,15 @@ def training (modele_name, train_test_val_dataset) :
 
 
     def extract_langage(examples) :
-        # On va extraire le langage arabe et le langage français
-        inputs = [fr['fr'] for fr in examples["translation"]]
-        target = [arb['arb'] for arb in examples["translation"]]
+        if SRC_2_TGT :
+            # On va extraire le langage arabe et le langage français
+            inputs = [fr['fr'] for fr in examples["translation"]]
+            target = [arb['arb'] for arb in examples["translation"]]
+            
+        else :
+            inputs = [arb['arb'] for arb in examples["translation"]]
+            target = [fr['fr'] for fr in examples["translation"]] 
+
         return {'inputs' : inputs, 'target' : target}
 
 
