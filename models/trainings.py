@@ -20,7 +20,7 @@ from transformers import (
 )
 
 
-SRC_2_TGT = False  # if it False, that means we will train our model from chadian arabic to french. 
+SRC_2_TGT = True  # if it False, that means we will train our model from chadian arabic to french. 
                    # If you wanna do the inverse, change it to True
 
 max_input_length = 128
