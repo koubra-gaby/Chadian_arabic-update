@@ -17,6 +17,7 @@ def preparer_sentences_entrainer_fastext(fichier1, fichier2, file_to_save, lang)
     sentences = []
     if lang == "fr":
       patern = r"[^\w\s]"
+      print("french")
       #patern = r"[^\W\d_]+"
     else :
       patern = r"[^\w\s']"
