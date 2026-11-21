@@ -34,7 +34,7 @@ def preparer_sentences_entrainer_fastext(fichier1, fichier2, file_to_save, lang)
                         ligne,
                         flags=re.UNICODE
                     )
-
+                    print(ligne)
                     # Tokenisation mot par mot
                     tokens = word_tokenize(
                         ligne,
