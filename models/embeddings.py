@@ -16,8 +16,8 @@ from gensim.test.utils import common_texts
 def preparer_sentences_entrainer_fastext(fichier1, fichier2, file_to_save, lang):
     sentences = []
     if lang == "fr":
-      #patern = r"[^\w\s'-]"
-      patern = r"[^\W\d_]+"
+      patern = r"[^\w\s]"
+      #patern = r"[^\W\d_]+"
     else :
       patern = r"[^\w\s']"
     for fichier in [fichier1, fichier2]:
